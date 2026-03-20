@@ -1,6 +1,7 @@
 from django.db import models
 from users.models  import User 
 from doctors.models import Doctor
+import uuid 
 
 # Create your models here.
 class Appointment(models.Model):
@@ -15,3 +16,7 @@ class Appointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=20 , choices=STATUS_CHOICES, default='pending')
+    room_id = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return f"{self.patient.username} - {self.doctor}"
