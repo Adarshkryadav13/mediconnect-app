@@ -5,7 +5,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from users.views import login_view
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
 
+def home(request):
+    return HttpResponse("Backend is running 🚀")
+
+urlpatterns = [
+    path('', home),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
