@@ -21,7 +21,7 @@ function Login({ onSuccess }) {
 
     try {
       const res = await api.post("auth/login/", form);
-
+      localStorage.setItem("access", res.data.access);
       console.log("LOGIN SUCCESS:", res.data);
 
       const user = await login(res.data);

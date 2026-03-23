@@ -2,19 +2,21 @@
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView
+from users.views import login_view
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/login/', TokenObtainPairView.as_view()),
+    # path('api/auth/login/', TokenObtainPairView.as_view()),
+    path('api/auth/login/', login_view),
     path('api/auth/', include('users.urls')),
     path('api/doctors/', include('doctors.urls')),
     path('api/appointments/', include('appointments.urls')),
     path('api/symptoms/', include('symptoms.urls')),
     path('api/', include('users.urls')),
-
+    
 
 ]
 if settings.DEBUG:

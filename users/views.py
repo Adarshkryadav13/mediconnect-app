@@ -6,6 +6,7 @@ from .models import CartItem
 from .serializers import CartItemSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -32,20 +33,21 @@ def login_view(request):
     username = request.data.get("username")
     password = request.data.get("password")
 
-    print("LOGIN DATA:", username, password)  # debug
+    user = authenticate(request, username=username, password=password)
 
-    user = authenticate(username=username, password=password)
-
-    if user is not None:
-        return Response({
-            "message": "Login successful",
-            "is_doctor": user.is_doctor
-        })
-    else:
+    if user is None:
         return Response(
             {"error": "Invalid username or password"},
-            status=400
+            status=401
         )
+
+    refresh = RefreshToken.for_user(user)
+
+    return Response({
+        "access": str(refresh.access_token),   # 🔥 IMPORTANT
+        "refresh": str(refresh),
+        "is_doctor": user.is_doctor
+    })
 
 
 @api_view(['GET'])
@@ -55,29 +57,29 @@ def get_user(request):
     return Response(serializer.data)
 
 
-USER_ID = 1
-
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def cart(request):
 
-    User = get_user_model()
-    user = User.objects.get(id=USER_ID)
+    user = request.user
+    print("USER:", request.user)
+    # 🔐 login required
+    if not user.is_authenticated:
+        return Response({"error": "Login required"}, status=401)
 
-    # ✅ helper function for count
     def get_cart_count():
         return sum(item.quantity for item in CartItem.objects.filter(user=user))
 
-    # ✅ GET → fetch cart
+    # ✅ GET
     if request.method == 'GET':
         items = CartItem.objects.filter(user=user)
         serializer = CartItemSerializer(items, many=True)
 
         return Response({
             "items": serializer.data,
-            "count": get_cart_count()   # 🔥 added
+            "count": get_cart_count()
         })
 
-    # ✅ POST → add/update cart
+    # ✅ POST
     if request.method == 'POST':
         name = request.data.get("name")
         price = request.data.get("price")
@@ -94,10 +96,10 @@ def cart(request):
 
         return Response({
             "message": "Item added",
-            "count": get_cart_count()   # 🔥 added
+            "count": get_cart_count()
         })
 
-    # ✅ PUT → update quantity
+    # ✅ PUT
     if request.method == 'PUT':
         name = request.data.get("name")
         action = request.data.get("action")
@@ -109,24 +111,23 @@ def cart(request):
 
         if action == "inc":
             item.quantity += 1
-
         elif action == "dec":
             item.quantity -= 1
             if item.quantity <= 0:
                 item.delete()
                 return Response({
                     "message": "Item removed",
-                    "count": get_cart_count()  # 🔥 updated
+                    "count": get_cart_count()
                 })
 
         item.save()
 
         return Response({
             "message": "Updated",
-            "count": get_cart_count()   # 🔥 added
+            "count": get_cart_count()
         })
 
-    # ✅ DELETE → remove item
+    # ✅ DELETE
     if request.method == 'DELETE':
         name = request.data.get("name")
 
@@ -134,5 +135,5 @@ def cart(request):
 
         return Response({
             "message": "Item removed",
-            "count": get_cart_count()   # 🔥 added
+            "count": get_cart_count()
         })
