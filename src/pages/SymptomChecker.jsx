@@ -11,7 +11,7 @@ export default function SymptomChecker() {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/symptoms/check/",
+        "https://mediconnect-app-ej4q.onrender.com/api/",
         { symptoms }
       );
       setResult(res.data);

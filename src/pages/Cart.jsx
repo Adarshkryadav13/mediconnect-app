@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { useCart } from "../context/CartContext";
 import ValueDeals from "../components/Valuedeal";
 
@@ -9,7 +9,7 @@ export default function Cart() {
   // ✅ Fetch cart from Django
   const fetchCart = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/cart/");
+      const res = await api.get("https://mediconnect-app-ej4q.onrender.com/api/");
       setCartItems(res.data.items);
       
     } catch (err) {
@@ -24,7 +24,7 @@ export default function Cart() {
   // ✅ Remove item
   const removeFromCart = async (name) => {
     try {
-     const res = await axios.delete("http://localhost:8000/api/cart/", {
+     const res = await api.delete("https://mediconnect-app-ej4q.onrender.com/api/", {
         data: { name },
       });
       setCartCount(res.data.count); // update
@@ -36,8 +36,8 @@ export default function Cart() {
   };
   const updateQuantity = async (name, action) => {
     try {
-        await axios.put(
-            "http://localhost:8000/api/cart/",
+        await api.put(
+            "https://mediconnect-app-ej4q.onrender.com/api/",
             {
               name,
               action,

@@ -57,7 +57,7 @@ export default function TopTests() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/cart/",
+        "https://mediconnect-app-ej4q.onrender.com/api/",
         {
           name: test.name,
           price: test.price,

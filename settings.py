@@ -143,3 +143,12 @@ import os
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+import os
+
+if os.environ.get("CREATE_SUPERUSER") == "True":
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "admin@gmail.com", "admin123")

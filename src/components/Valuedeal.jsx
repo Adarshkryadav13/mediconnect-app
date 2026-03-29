@@ -1,9 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import axios from "axios";
+
 
 import "swiper/css";
 import "swiper/css/navigation";
+import api from "../api/axios";
 
 const products = [
   {
@@ -50,8 +51,8 @@ export default function ValueDeals() {
     console.log("CLICKED:", product);
 
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/cart/",
+      const res = await api.post(
+        "https://mediconnect-app-ej4q.onrender.com/api/",
         {
           name: product.name,
           price: product.price, // number ✅

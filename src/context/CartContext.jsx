@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import api from "../api/axios";
 
 const CartContext = createContext();
 
@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
     
     try {
       
-      const res = await axios.get("http://localhost:8000/api/cart/");
+      const res = await api.get("https://mediconnect-app-ej4q.onrender.com/api/");
 
       setCartItems(res.data.items);   // ✅ items
       setCartCount(res.data.count);   // ✅ count
