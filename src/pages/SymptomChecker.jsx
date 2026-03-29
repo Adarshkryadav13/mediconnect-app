@@ -11,10 +11,7 @@ export default function SymptomChecker() {
     console.log("Button clicked");   // add this
     setLoading(true);
     try {
-      const res = await api.post(
-        "https://mediconnect-app-ej4q.onrender.com/api/",
-        { symptoms }
-      );
+      const res = api.post("symptoms/", data);
       setResult(res.data);
     } catch (error) {
       console.error(error);
