@@ -28,26 +28,27 @@ def me(request):
         "username": user.username,
         "is_doctor": user.is_doctor,
     } )
+
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get("username")
     password = request.data.get("password")
 
-    user = authenticate(request, username=username, password=password)
+    user = authenticate(username=username, password=password)
 
-    if user is None:
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "is_doctor": user.is_doctor
+        })
+    else:
         return Response(
             {"error": "Invalid username or password"},
-            status=401
+            status=400
         )
-
-    refresh = RefreshToken.for_user(user)
-
-    return Response({
-        "access": str(refresh.access_token),   # 🔥 IMPORTANT
-        "refresh": str(refresh),
-        "is_doctor": user.is_doctor
-    })
 
 
 @api_view(['GET'])

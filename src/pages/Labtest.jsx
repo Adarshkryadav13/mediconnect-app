@@ -1,3 +1,4 @@
+import api from "../api/axios";
 import { useCart } from "../context/CartContext";
 import axios from "axios";
 
@@ -56,7 +57,7 @@ export default function TopTests() {
     
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "https://mediconnect-app-ej4q.onrender.com/api/",
         {
           name: test.name,

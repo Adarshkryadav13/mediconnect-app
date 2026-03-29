@@ -56,9 +56,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://mediconnect-app-mfgs.vercel.app",
+]
 ROOT_URLCONF = 'urls'
-
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

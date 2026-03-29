@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import api from "../api/axios";
 
 export default function SymptomChecker() {
   const [symptoms, setSymptoms] = useState("");
@@ -10,7 +11,7 @@ export default function SymptomChecker() {
     console.log("Button clicked");   // add this
     setLoading(true);
     try {
-      const res = await axios.post(
+      const res = await api.post(
         "https://mediconnect-app-ej4q.onrender.com/api/",
         { symptoms }
       );
